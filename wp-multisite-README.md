@@ -1,4 +1,4 @@
-# WordPress Plugins - Multisite
+# WordPress- Multisite
 This repository is used to build WordPress distributions for deployment from git. It contains the following plugins:
 
 * [WordPress MU Domain Mapping](http://wordpress.org/plugins/wordpress-mu-domain-mapping/) - Maps domains to subsites in a Multisite instance.
