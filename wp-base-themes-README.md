@@ -1,4 +1,4 @@
-# WordPress Theme Base
+# WordPress - Base Themes
 This repository is used to build WordPress distributions for deployment from git.
 
 ## License
