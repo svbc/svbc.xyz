@@ -1,3 +1,8 @@
+version 2.1.1 ( updated 07-23-2014 )
+- Fixed the issue with ul and ol elements styling in Page Builder layouts
+- Bumped version number
+	* style.css
+
 version 2.1 ( updated 07-22-2014 )
 - Added "Back to top" button
 - Added Side Navigation on single pages

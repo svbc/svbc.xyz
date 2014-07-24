@@ -1,7 +1,7 @@
 /*
 Theme Name: Divi
 Theme URI: http://www.elegantthemes.com/gallery/divi/
-Version: 2.1
+Version: 2.1.1
 Description: Smart. Flexible. Beautiful. Divi is the most powerful theme in our collection.
 Author: Elegant Themes
 Author URI: http://www.elegantthemes.com
@@ -124,8 +124,8 @@ embed, iframe, object, video { max-width: 100%; }
 	.entry-content tr th, .entry-content thead th { color: #555; font-weight: bold; padding: 9px 24px; }
 	.entry-content tr td { border-top: 1px solid #eee; padding: 6px 24px; }
 
-#left-area ul, .comment-content ul { list-style-type: disc; padding: 0 0 23px 16px; line-height: 26px; }
-	#left-area ol, .comment-content ol { list-style-type: decimal; list-style-position: inside; padding: 0 0 23px 0; line-height: 26px; }
+#left-area ul, .entry-content ul, .comment-content ul { list-style-type: disc; padding: 0 0 23px 16px; line-height: 26px; }
+	#left-area ol, .entry-content ol, .comment-content ol { list-style-type: decimal; list-style-position: inside; padding: 0 0 23px 0; line-height: 26px; }
 		#left-area ul li ul, .entry-content ul li ol, .comment-content ul li ul, .comment-content ul li ol { padding: 2px 0px 2px 20px; }
 		#left-area ol li ul, .entry-content ol li ol, .comment-content ol li ul, .comment-content ol li ol  { padding: 2px 0px 2px 35px; }
 		ol.commentlist, .comment .children { list-style: none !important; line-height: 1.7em !important; padding: 0 !important; }
