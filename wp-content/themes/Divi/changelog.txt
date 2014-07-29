@@ -1,3 +1,9 @@
+version 2.1.2 ( updated 07-24-2014 )
+- Fixed the issue with wrong theme number value detected, if a child theme is being used
+	* functions.php
+- Bumped version number
+	* style.css
+
 version 2.1.1 ( updated 07-23-2014 )
 - Fixed the issue with ul and ol elements styling in Page Builder layouts
 - Bumped version number

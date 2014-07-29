@@ -185,13 +185,13 @@ endif;
 
 if ( ! function_exists( 'et_get_theme_version' ) ) :
 function et_get_theme_version() {
-	if ( ! function_exists( 'get_custom_header' ) ){
-		$theme_info = get_theme_data( get_template_directory() . '/style.css' );
-		$theme_version = $theme_info['Version'];
-	} else {
-		$theme_info = wp_get_theme();
-		$theme_version = $theme_info->display('Version');
+	$theme_info = wp_get_theme();
+
+	if ( is_child_theme() ) {
+		$theme_info = wp_get_theme( $theme_info->parent_theme );
 	}
+
+	$theme_version = $theme_info->display( 'Version' );
 
 	return $theme_version;
 }
