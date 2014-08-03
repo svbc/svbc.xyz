@@ -15,6 +15,7 @@ This repository is used to build WordPress distributions for deployment from git
 * [WordPress Importer](http://wordpress.org/plugins/wordpress-importer/) - Imports WordPress Export files.
 * [WordPress MU Domain Mapping](http://wordpress.org/plugins/wordpress-mu-domain-mapping/) - Maps domains to subsites in a Multisite instance.
 * [WordPress SEO by Yoast](http://wordpress.org/plugins/wordpress-seo/) - Good for customizing a bunch of stuff related to SEO; super annoying artwork throughout that I hate so much!
+* [WP-PageNavi](http://wordpress.org/plugins/wp-pagenavi/) -  Adds a more advanced paging navigation interface.
 * [WP-Piwik](http://wordpress.org/plugins/wp-piwik/) - Adds code and shows stats from a [Piwik](http://piwik.org) instance, such as [Analytics X](http://analytic.sx)!
 
 ## License
