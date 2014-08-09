@@ -3,6 +3,7 @@ This repository is used to build WordPress distributions for deployment from git
 
 * [Code Snippets](http://wordpress.org/plugins/code-snippets/) - Store snippets of code in the database that would otherwise go into `functions.php`.
 * [Edit Flow](http://wordpress.org/plugins/edit-flow/) - Adds editorial workflow tools.
+* [Disable Google Fonts](http://wordpress.org/plugins/disable-google-fonts/) - This plugin stops loading of Open Sans and other fonts used by WordPress and bundled themes from Google Fonts.
 * [Geo Mashup](http://wordpress.org/plugins/geo-mashup/) - Adds mapping data to posts (there are [examples online](http://interi.org/2014/04/pods-maps/)).
 * [Post Snippets](http://wordpress.org/plugins/post-snippets/) - Keep a library of reusable code snippets, including custom shortcodes.
 * [PushPress](http://wordpress.org/plugins/pushpress/) - Adds PubSubHubbub (PuSH) support; should be activated as Network Plugin for Multisite instances.
