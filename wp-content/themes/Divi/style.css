@@ -1,7 +1,7 @@
 /*
 Theme Name: Divi
 Theme URI: http://www.elegantthemes.com/gallery/divi/
-Version: 2.1.2
+Version: 2.1.4
 Description: Smart. Flexible. Beautiful. Divi is the most powerful theme in our collection.
 Author: Elegant Themes
 Author URI: http://www.elegantthemes.com
@@ -116,6 +116,8 @@ embed, iframe, object, video { max-width: 100%; }
 	.et_pb_promo_button:hover, a.et_pb_more_button:hover, .et_pb_newsletter_button:hover { background: rgba( 255, 255, 255, 0.2 ); border: 2px solid transparent; padding: 6px 34px 6px 14px !important; }
 		.et_pb_pricing_table_button:hover, .et_pb_bg_layout_light .et_pb_promo_button:hover, .et_pb_bg_layout_light .et_pb_more_button:hover, .et_pb_bg_layout_light .et_pb_newsletter_button:hover, .comment-reply-link:hover, .form-submit input:hover, .et_pb_contact_submit:hover, .et_pb_contact_reset:hover { background: rgba( 0, 0, 0, 0.05 ); border: 2px solid transparent; padding: 6px 34px 6px 14px !important; }
 		.form-submit input:hover, .et_pb_contact_submit:hover, .et_pb_contact_reset:hover { padding: 6px 20px !important; }
+		.et_subscribe_loader { display: none; background: url('images/subscribe-loader.gif'); width: 16px; height: 16px; position: absolute; left: 50%; top: 16px; margin-left: -8px; }
+		.et_pb_button_text_loading .et_pb_newsletter_button_text { visibility: hidden; }
 
 	.et_pb_pricing_table_button:after, .et_pb_promo_button:after, a.et_pb_more_button:after, .et_pb_newsletter_button:after, .comment-reply-link:after { font-size: 32px; line-height: 1em; content:"\35"; opacity: 0; position: absolute; margin-left: -20px; -moz-transition: all 0.2s; -webkit-transition: all 0.2s; transition: all 0.2s; top: 7px; right: 5px; }
 		.et_pb_pricing_table_button:hover:after, .et_pb_promo_button:hover:after, a.et_pb_more_button:hover:after, .et_pb_newsletter_button:hover:after, .comment-reply-link:hover:after { opacity: 1; margin-left: 0; }

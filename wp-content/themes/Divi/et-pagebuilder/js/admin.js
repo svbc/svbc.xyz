@@ -1355,13 +1355,13 @@ var ET_PageBuilder = ET_PageBuilder || {};
 							$this_el.val( 0 );
 						}
 
-					    if ( $this_el.val() > 100 ) {
-					    	$this_el.val( 100 );
-					    }
+						if ( $this_el.val() > 100 ) {
+							$this_el.val( 100 );
+						}
 
-					    if ( $this_el.val() !=='' ) {
-					    	$this_el.val( Math.round( $this_el.val() ) );
-					    }
+						if ( $this_el.val() !=='' ) {
+							$this_el.val( Math.round( $this_el.val() ) );
+						}
 					});
 				}
 
@@ -2859,6 +2859,9 @@ var ET_PageBuilder = ET_PageBuilder || {};
 		} );
 
 		function et_pb_deactivate_builder() {
+			var $body = $( 'body' ),
+				page_position = 0;
+
 			et_pb_set_content( 'content', $et_pb_old_content.val() );
 
 			window.wpActiveEditor = 'content';
@@ -2872,6 +2875,10 @@ var ET_PageBuilder = ET_PageBuilder || {};
 			$main_editor_wrapper.toggleClass( 'et_pb_hidden' );
 
 			et_pb_show_layout_settings();
+
+			page_position = $body.scrollTop();
+
+			$body.scrollTop( page_position + 1 );
 		}
 
 		function et_pb_create_prompt_modal( action ) {

@@ -121,7 +121,7 @@ function et_divi_load_scripts_styles(){
 	wp_enqueue_script( 'divi-custom-script', $template_dir . '/js/custom.js', array( 'jquery' ), $theme_version, true );
 	wp_localize_script( 'divi-custom-script', 'et_custom', array(
 		'ajaxurl'             => admin_url( 'admin-ajax.php' ),
-		'images_uri'                    => get_template_directory_uri() . '/images',
+		'images_uri'          => get_template_directory_uri() . '/images',
 		'et_load_nonce'       => wp_create_nonce( 'et_load_nonce' ),
 		'subscription_failed' => __( 'Please, check the fields below to make sure you entered the correct information.', 'Divi' ),
 		'fill'                => esc_html__( 'Fill', 'Divi' ),
@@ -404,11 +404,11 @@ function et_single_settings_meta_box( $post ) {
 
 	$page_layouts = array(
 		'et_right_sidebar'   => __( 'Right Sidebar', 'Divi' ),
-   		'et_left_sidebar'    => __( 'Left Sidebar', 'Divi' ),
-   		'et_full_width_page' => __( 'Full Width', 'Divi' ),
+		'et_left_sidebar'    => __( 'Left Sidebar', 'Divi' ),
+		'et_full_width_page' => __( 'Full Width', 'Divi' ),
 	);
 
-	$layouts        = array(
+	$layouts = array(
 		'light' => __( 'Light', 'Divi' ),
 		'dark'  => __( 'Dark', 'Divi' ),
 	);
@@ -431,7 +431,7 @@ function et_single_settings_meta_box( $post ) {
 			printf( '<option value="%2$s"%3$s>%1$s</option>',
 				esc_html( $layout_name ),
 				esc_attr( $layout_value ),
-				selected( $layout_value, $page_layout )
+				selected( $layout_value, $page_layout, false )
 			);
 		} ?>
 		</select>
@@ -440,8 +440,8 @@ function et_single_settings_meta_box( $post ) {
 		<label for="et_pb_side_nav" style="display: block; font-weight: bold; margin-bottom: 5px;"><?php esc_html_e( 'Side Navigation', 'Divi' ); ?>: </label>
 
 		<select id="et_pb_side_nav" name="et_pb_side_nav">
-			<option value="off"<?php selected( 'off', $side_nav ); ?> >Off</option>
-			<option value="on" <?php selected( 'on', $side_nav ); ?> >On</option>
+			<option value="off" <?php selected( 'off', $side_nav ); ?>><?php esc_html_e( 'Off', 'Divi' ); ?></option>
+			<option value="on" <?php selected( 'on', $side_nav ); ?>><?php esc_html_e( 'On', 'Divi' ); ?></option>
 		</select>
 	</p>
 <?php if ( in_array( $post->post_type, array( 'page', 'project' ) ) ) : ?>
@@ -1232,11 +1232,11 @@ function et_layout_body_class( $classes ) {
 	}
 
 	if ( stristr( $_SERVER['HTTP_USER_AGENT'],"mac") ) {
-	    $classes[] = 'osx';
+		$classes[] = 'osx';
 	} elseif ( stristr( $_SERVER['HTTP_USER_AGENT'],"linux") ) {
-	    $classes[] = 'linux';
+		$classes[] = 'linux';
 	} elseif ( stristr( $_SERVER['HTTP_USER_AGENT'],"windows") ) {
-	    $classes[] = 'windows';
+		$classes[] = 'windows';
 	}
 
 	return $classes;
@@ -1373,7 +1373,7 @@ function et_divi_check_woocommerce_images() {
 add_action( 'admin_init', 'et_divi_check_woocommerce_images' );
 
 function et_divi_woocommerce_image_dimensions() {
-  	$catalog = array(
+	$catalog = array(
 		'width' 	=> '400',
 		'height'	=> '400',
 		'crop'		=> 1,
@@ -2579,7 +2579,7 @@ function et_pb_social_media_follow( $atts, $content = null ) {
 			'background_layout' => 'light',
 			'link_shape' => 'rounded_rectangle',
 			'url_new_window' => 'on',
-			'follow_button' => 'off'
+			'follow_button' => 'off',
 		), $atts
 	) );
 
@@ -2612,7 +2612,7 @@ function et_pb_social_media_follow_network ( $atts, $content = null ) {
 			'social_network' => '',
 			'url' => '#',
 			'bg_color' => '#666666',
-			'follow_button' => '' // this is set in parent shortcode, this is just setting the initial var
+			'follow_button' => '', // this is set in parent shortcode, this is just setting the initial var
 		), $atts
 	) );
 
@@ -2623,7 +2623,7 @@ function et_pb_social_media_follow_network ( $atts, $content = null ) {
 	if ( 'on' === $et_pb_social_media_follow_link['follow_button'] ) {
 		$follow_button = sprintf(
 			'<a href="%1$s" class="follow_button" title="%2$s"%3$s>%4$s</a>',
-			esc_url_raw( $url ),
+			esc_url( $url ),
 			esc_attr( $content ),
 			( 'on' === $et_pb_social_media_follow_link['url_new_window'] ? ' target="_blank"' : '' ),
 			esc_html__( 'Follow', 'Divi' )
@@ -2638,7 +2638,7 @@ function et_pb_social_media_follow_network ( $atts, $content = null ) {
 		( '' !== $social_network ? sprintf( ' et-social-%s', esc_attr( $social_network ) ) : '' ),
 		( '' !== $et_pb_social_media_follow_link['shape'] ? sprintf( ' %s', esc_attr( $et_pb_social_media_follow_link['shape'] ) ) : '' ),
 		$bg_color_style,
-		esc_url_raw( $url ),
+		esc_url( $url ),
 		esc_attr( $content ),
 		sanitize_text_field( $content ),
 		( 'on' === $et_pb_social_media_follow_link['url_new_window'] ? ' target="_blank"' : '' ),
@@ -2921,19 +2921,16 @@ function et_pb_get_mailchimp_lists() {
 	$lists = array();
 
 	if ( 'on' === et_get_option( 'divi_regenerate_mailchimp_lists', 'false' ) || false === ( $et_pb_mailchimp_lists = get_transient( 'et_pb_mailchimp_lists' ) ) ) {
-		if ( ! class_exists( 'Mailchimp' ) )
-			require_once( get_template_directory() . '/includes/subscription/mailchimp/Mailchimp.php' );
+		if ( ! class_exists( 'MailChimp' ) )
+			require_once( get_template_directory() . '/includes/subscription/mailchimp/mailchimp.php' );
 
 		$mailchimp_api_key = et_get_option( 'divi_mailchimp_api_key' );
 
 		if ( '' === $mailchimp_api_key ) return false;
 
 		try {
-			$mailchimp = new Mailchimp( $mailchimp_api_key );
-			$mailchimp_lists = new Mailchimp_Lists( $mailchimp );
-
-			$retval = $mailchimp_lists->getlist();
-
+			$mailchimp = new MailChimp( $mailchimp_api_key );
+			$retval = $mailchimp->call('lists/list');
 			foreach ( $retval['data'] as $list ) {
 				$lists[$list['id']] = $list['name'];
 			}
@@ -2991,6 +2988,11 @@ function et_pb_get_aweber_lists() {
 		}
 
 		$account = et_pb_get_aweber_account();
+
+		if ( ! $account ) {
+			return false;
+		}
+
 		$aweber_lists = $account->lists;
 
 		if ( isset( $aweber_lists ) ) {
@@ -3008,14 +3010,14 @@ function et_pb_get_aweber_lists() {
 }
 endif;
 
-function et_pb_submit_subscribe_form(  ) {
+function et_pb_submit_subscribe_form() {
 	if ( ! wp_verify_nonce( $_POST['et_load_nonce'], 'et_load_nonce' ) ) die( json_encode( array( 'error' => __( 'Configuration error', 'Divi' ) ) ) );
 
 	$service = sanitize_text_field( $_POST['et_service'] );
 
 	$list_id = sanitize_text_field( $_POST['et_list_id'] );
 
-	$email = array( 'email' => sanitize_email( $_POST['et_email'] ) );
+	$email = sanitize_email( $_POST['et_email'] );
 
 	$firstname = sanitize_text_field( $_POST['et_firstname'] );
 
@@ -3030,39 +3032,41 @@ function et_pb_submit_subscribe_form(  ) {
 	switch ( $service ) {
 		case 'mailchimp' :
 			$lastname = sanitize_text_field( $_POST['et_lastname'] );
+			$email = array( 'email' => $email );
 
-			if ( ! class_exists( 'Mailchimp' ) )
-				require_once( get_template_directory() . '/includes/subscription/mailchimp/Mailchimp.php' );
+			if ( ! class_exists( 'MailChimp' ) )
+				require_once( get_template_directory() . '/includes/subscription/mailchimp/mailchimp.php' );
 
 			$mailchimp_api_key = et_get_option( 'divi_mailchimp_api_key' );
 
 			if ( '' === $mailchimp_api_key ) die( json_encode( array( 'error' => __( 'Configuration error: api key is not defined', 'Divi' ) ) ) );
 
-			try {
-				$mailchimp = new Mailchimp( $mailchimp_api_key );
-				$mailchimp_lists = new Mailchimp_Lists( $mailchimp );
 
-	 			$merge_vars = array(
+				$mailchimp = new MailChimp( $mailchimp_api_key );
+
+				$merge_vars = array(
 					'FNAME' => $firstname,
 					'LNAME' => $lastname,
 				);
 
-				$retval = $mailchimp_lists->subscribe( $list_id, $email, $merge_vars );
+				$retval =  $mailchimp->call('lists/subscribe', array(
+					'id'         => $list_id,
+					'email'      => $email,
+					'merge_vars' => $merge_vars,
+				));
 
-				$result = json_encode( array( 'success' => $success_message ) );
-			} catch ( Exception $e ) {
-				 if ( $e == 'List_AlreadySubscribed' ) {
-                    $error_code = $e->code;
-                }
-                    if ( $error_code = '214' ) {
-                        $error_message = str_replace( 'Click here to update your profile.', '', $e->getMessage() );
-                        $result = json_encode( array( 'success' => $error_message ) );
-                    } else {
-                    	$result = json_encode( array( 'success' => $e->getMessage() ) );
-                    }
-                }
+				if ( isset($retval['error']) ) {
+					if ( '214' == $retval['code'] ){
+						$error_message = str_replace( 'Click here to update your profile.', '', $retval['error'] );
+						$result = json_encode( array( 'success' => $error_message ) );
+					} else {
+						$result = json_encode( array( 'success' => $retval['error'] ) );
+					}
+				} else {
+					$result = json_encode( array( 'success' => $success_message ) );
+				}
 
-            die( $result );
+			die( $result );
 			break;
 		case 'aweber' :
 			if ( ! class_exists( 'AWeberAPI' ) ) {
@@ -3070,6 +3074,10 @@ function et_pb_submit_subscribe_form(  ) {
 			}
 
 			$account = et_pb_get_aweber_account();
+
+			if ( ! $account ) {
+				die( json_encode( array( 'error' => __( 'Aweber: Wrong configuration data', 'Divi' ) ) ) );
+			}
 
 			try {
 				$list_url = "/accounts/{$account->id}/lists/{$list_id}";
@@ -3082,9 +3090,9 @@ function et_pb_submit_subscribe_form(  ) {
 					)
 				);
 
-				echo $success_message;
+				die( json_encode( array( 'success' => $success_message ) ) );
 			} catch ( Exception $exc ) {
-				die( $exc );
+				die( json_encode( array( 'error' => $exc->message ) ) );
 			}
 
 			break;
@@ -3139,7 +3147,7 @@ function et_pb_signup( $atts, $content = null ) {
 							<label class="et_pb_contact_form_label" for="et_pb_signup_email" style="display: none;">%7$s</label>
 							<input id="et_pb_signup_email" class="input" type="text" value="%8$s" name="et_pb_signup_email">
 						</p>
-						<p><a class="et_pb_newsletter_button" href="#">%1$s</a></p>
+						<p><a class="et_pb_newsletter_button" href="#"><span class="et_subscribe_loader"></span><span class="et_pb_newsletter_button_text">%1$s</span></a></p>
 						<input type="hidden" value="%2$s" name="et_pb_signup_list_id" />
 					</div>',
 					esc_html( $button_text ),
@@ -3189,7 +3197,7 @@ function et_pb_signup( $atts, $content = null ) {
 							<label class="et_pb_contact_form_label" for="et_pb_signup_email" style="display: none;">%5$s</label>
 							<input id="et_pb_signup_email" class="input" type="text" value="%6$s" name="et_pb_signup_email">
 						</p>
-						<p><a class="et_pb_newsletter_button" href="#">%1$s</a></p>
+						<p><a class="et_pb_newsletter_button" href="#"><span class="et_subscribe_loader"></span><span class="et_pb_newsletter_button_text">%1$s</span></a></p>
 						<input type="hidden" value="%2$s" name="et_pb_signup_list_id" />
 					</div>',
 					esc_html( $button_text ),
@@ -3249,13 +3257,13 @@ function et_pb_login( $atts, $content = null ) {
 
 	if ( is_user_logged_in() ) {
 		global $current_user;
-     	get_currentuserinfo();
+		get_currentuserinfo();
 
 		$content .= sprintf( '<br/>%1$s <a href="%2$s">%3$s</a>',
-				sprintf( __( 'Logged in as %1$s', 'Divi' ), esc_html( $current_user->display_name ) ),
-				esc_url( wp_logout_url( $redirect_url ) ),
-				esc_html__( 'Log out', 'Divi' )
-			);
+			sprintf( __( 'Logged in as %1$s', 'Divi' ), esc_html( $current_user->display_name ) ),
+			esc_url( wp_logout_url( $redirect_url ) ),
+			esc_html__( 'Log out', 'Divi' )
+		);
 	}
 
 	$class = " et_pb_bg_layout_{$background_layout} et_pb_text_align_{$text_orientation}";
@@ -3554,13 +3562,12 @@ function et_pb_blog( $atts ) {
 
 add_shortcode( 'et_pb_gallery', 'et_pb_gallery' );
 function et_pb_gallery( $atts ) {
-
 	extract(shortcode_atts(array(
 		'module_id' => '',
 		'module_class' => '',
-		'gallery_ids'    => '',
-		'fullwidth'  => 'off',
-		'show_title_and_caption'    => 'on',
+		'gallery_ids' => '',
+		'fullwidth' => 'off',
+		'show_title_and_caption' => 'on',
 		'background_layout' => 'light',
 		'posts_number' => 4,
 		'show_pagination' => 'on',
@@ -3800,7 +3807,8 @@ function et_pb_portfolio( $atts ) {
 	return $output;
 }
 
-function get_portfolio_projects( $args = array() ) {
+if ( ! function_exists( 'et_divi_get_projects' ) ) :
+function et_divi_get_projects( $args = array() ) {
 
 	$default_args = array(
 		'post_type' => 'project',
@@ -3811,6 +3819,7 @@ function get_portfolio_projects( $args = array() ) {
 	return new WP_Query( $args );
 
 }
+endif;
 
 add_shortcode( 'et_pb_filterable_portfolio', 'et_pb_filterable_portfolio' );
 function et_pb_filterable_portfolio( $atts ) {
@@ -3849,7 +3858,7 @@ function et_pb_filterable_portfolio( $atts ) {
 		);
 	}
 
-	$projects = get_portfolio_projects( $args );
+	$projects = et_divi_get_projects( $args );
 
 	$categories_included = array();
 	ob_start();
@@ -3910,6 +3919,8 @@ function et_pb_filterable_portfolio( $atts ) {
 			<?php
 		}
 	}
+
+	wp_reset_postdata();
 
 	$posts = ob_get_clean();
 
@@ -3995,7 +4006,7 @@ function et_pb_fullwidth_portfolio( $atts ) {
 		);
 	}
 
-	$projects = get_portfolio_projects( $args );
+	$projects = et_divi_get_projects( $args );
 
 	ob_start();
 	if( $projects->post_count > 0 ) {
@@ -4038,6 +4049,8 @@ function et_pb_fullwidth_portfolio( $atts ) {
 			<?php
 		}
 	}
+
+	wp_reset_postdata();
 
 	$posts = ob_get_clean();
 
@@ -4593,7 +4606,6 @@ function et_pb_map_pin( $atts, $content = null ) {
 		'<div class="et_pb_map_pin" data-lat="%1$s" data-lng="%2$s" data-title="%3$s">
 			%4$s
 		</div>',
-
 		esc_attr( $pin_address_lat ),
 		esc_attr( $pin_address_lng ),
 		esc_html( $title ),

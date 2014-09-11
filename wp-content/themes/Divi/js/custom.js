@@ -1667,12 +1667,14 @@
 
 		function et_fix_video_wmode( video_wrapper ) {
 				$( video_wrapper ).each( function() {
-					var $this_el = $(this).find( 'iframe' ),
-						src_attr = $this_el.attr('src'),
-						wmode_character = src_attr.indexOf( '?' ) == -1 ? '?' : '&amp;',
-						this_src = src_attr + wmode_character + 'wmode=opaque';
+					if ( $(this).find( 'iframe' ).length ) {
+						var $this_el = $(this).find( 'iframe' ),
+							src_attr = $this_el.attr('src'),
+							wmode_character = src_attr.indexOf( '?' ) == -1 ? '?' : '&amp;',
+							this_src = src_attr + wmode_character + 'wmode=opaque';
 
-					$this_el.attr('src', this_src);
+						$this_el.attr('src', this_src);
+					}
 				} );
 		}
 
@@ -1892,19 +1894,28 @@
 					et_email : $email.val(),
 					et_service : service
 				},
+				beforeSend: function() {
+					$newsletter_container
+						.find( '.et_pb_newsletter_button' )
+						.addClass( 'et_pb_button_text_loading' )
+						.find('.et_subscribe_loader')
+						.show();
+				},
+				complete: function(){
+					$newsletter_container
+						.find( '.et_pb_newsletter_button' )
+						.removeClass( 'et_pb_button_text_loading' )
+						.find('.et_subscribe_loader')
+						.hide();
+				},
 				success: function( data ){
 					if ( data ) {
-						if ( service == 'mailchimp' ) {
-							if ( data.error ) {
-								$result.html( data.error ).show();
-							}
-							if ( data.success ) {
-								$newsletter_container.find( '.et_pb_newsletter_form > p' ).hide();
-								$result.html( data.success ).show();
-							}
-						} else {
+						if ( data.error ) {
+							$result.html( data.error ).show();
+						}
+						if ( data.success ) {
 							$newsletter_container.find( '.et_pb_newsletter_form > p' ).hide();
-							$result.html( data ).show();
+							$result.html( data.success ).show();
 						}
 					} else {
 						$result.html( et_custom.subscription_failed ).show();
