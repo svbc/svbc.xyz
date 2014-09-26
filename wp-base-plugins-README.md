@@ -3,19 +3,15 @@ This repository is used to build WordPress distributions for deployment from git
 
 * [Code Snippets](http://wordpress.org/plugins/code-snippets/) - Store snippets of code in the database that would otherwise go into `functions.php`.
 * [Edit Flow](http://wordpress.org/plugins/edit-flow/) - Adds editorial workflow tools.
-* [Disable Google Fonts](http://wordpress.org/plugins/disable-google-fonts/) - This plugin stops loading of Open Sans and other fonts used by WordPress and bundled themes from Google Fonts.
 * [Geo Mashup](http://wordpress.org/plugins/geo-mashup/) - Adds mapping data to posts (there are [examples online](http://interi.org/2014/04/pods-maps/)).
 * [Humans TXT](http://wordpress.org/plugins/humanstxt/) - Credit the people behind your website in your humans.txt file. Easy to edit, directly within WordPress. 
 * [Post Snippets](http://wordpress.org/plugins/post-snippets/) - Keep a library of reusable code snippets, including custom shortcodes.
 * [PushPress](http://wordpress.org/plugins/pushpress/) - Adds PubSubHubbub (PuSH) support; should be activated as Network Plugin for Multisite instances.
 * [Redirection](http://wordpress.org/plugins/redirection/) - Manages 301 redirections and logs 404 errors.
 * [Regenerate Thumbnails](https://wordpress.org/plugins/regenerate-thumbnails/) - Allows you to regenerate your thumbnails after changing the thumbnail sizes.
-* [Search Everything](http://wordpress.org/plugins/search-everything/) - Enhanced search options, such as including custom post types.
 * [Subscribe To Comments Reloaded](http://wordpress.org/plugins/subscribe-to-comments-reloaded/) - Let's users subscribe to comments on posts, without third-party service.
 * [SyntaxHighlighter Evolved](http://wordpress.org/plugins/syntaxhighlighter/) - Provides syntaxhighlighting, may be deprecated in favor of Markdown code blocks provided by another plugin.
 * [Upload File Type Settings Plugin](http://wordpress.org/plugins/upload-file-type-settings-plugin/) - Allows adding additional file types to upload in the media library.
-* [WordPress Importer](http://wordpress.org/plugins/wordpress-importer/) - Imports WordPress Export files.
-* [WordPress MU Domain Mapping](http://wordpress.org/plugins/wordpress-mu-domain-mapping/) - Maps domains to subsites in a Multisite instance.
 * [WordPress SEO by Yoast](http://wordpress.org/plugins/wordpress-seo/) - Good for customizing a bunch of stuff related to SEO; super annoying artwork throughout that I hate so much!
 * [WP-PageNavi](http://wordpress.org/plugins/wp-pagenavi/) -  Adds a more advanced paging navigation interface.
 * [WP-Piwik](http://wordpress.org/plugins/wp-piwik/) - Adds code and shows stats from a [Piwik](http://piwik.org) instance, such as [Analytics X](http://analytic.sx)!
