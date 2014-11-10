@@ -30,6 +30,14 @@ var ET_PageBuilder = ET_PageBuilder || {};
 						'label' : 'et_pb_gallery'
 					},
 					{
+						'title' : 'Video',
+						'label' : 'et_pb_video'
+					},
+					{
+						'title' : 'Video Slider',
+						'label' : 'et_pb_video_slider'
+					},
+					{
 						'title' : 'Text',
 						'label' : 'et_pb_text'
 					},
@@ -130,7 +138,7 @@ var ET_PageBuilder = ET_PageBuilder || {};
 						'label' : 'et_pb_divider'
 					},
 					{
-						'title' : 'Team Member',
+						'title' : 'Person',
 						'label' : 'et_pb_team_member'
 					},
 					{
@@ -1261,6 +1269,7 @@ var ET_PageBuilder = ET_PageBuilder || {};
 					view,
 					$color_picker,
 					$upload_button,
+					$video_image_button,
 					$gallery_button,
 					$icon_font_list,
 					$et_affect_fields;
@@ -1272,6 +1281,8 @@ var ET_PageBuilder = ET_PageBuilder || {};
 				$color_picker = this.$el.find('.et-pb-color-picker-hex');
 
 				$upload_button = this.$el.find('.et-pb-upload-button');
+
+				$video_image_button = this.$el.find('.et-pb-video-image-button');
 
 				$gallery_button = this.$el.find('.et-pb-gallery-button');
 
@@ -1337,6 +1348,10 @@ var ET_PageBuilder = ET_PageBuilder || {};
 
 				if ( $upload_button.length ) {
 					et_pb_activate_upload( $upload_button );
+				}
+
+				if ( $video_image_button.length ) {
+					et_pb_generate_video_image( $video_image_button );
 				}
 
 				if ( $gallery_button.length ) {
@@ -1637,7 +1652,7 @@ var ET_PageBuilder = ET_PageBuilder || {};
 
 			generateAdvancedSortableItems : function( content, module_type ) {
 				var this_el = this,
-					et_pb_shortcodes_tags = 'et_pb_tab|et_pb_slide|et_pb_pricing_table|et_pb_counter|et_pb_accordion_item|et_pb_social_media_follow_network|et_pb_map_pin',
+					et_pb_shortcodes_tags = 'et_pb_tab|et_pb_slide|et_pb_pricing_table|et_pb_counter|et_pb_accordion_item|et_pb_video_slider_item|et_pb_social_media_follow_network|et_pb_map_pin',
 					reg_exp = window.wp.shortcode.regexp( et_pb_shortcodes_tags ),
 					inner_reg_exp = ET_PageBuilder_App.wp_regexp_not_global( et_pb_shortcodes_tags ),
 					matches = content.match( reg_exp );
@@ -1803,6 +1818,7 @@ var ET_PageBuilder = ET_PageBuilder || {};
 				var view,
 					$color_picker,
 					$upload_button,
+					$video_image_button,
 					$map,
 					$social_network_picker;
 
@@ -1826,6 +1842,12 @@ var ET_PageBuilder = ET_PageBuilder || {};
 
 				if ( $upload_button.length ) {
 					et_pb_activate_upload( $upload_button );
+				}
+
+				$video_image_button = this.$el.find('.et-pb-video-image-button');
+
+				if ( $video_image_button.length ) {
+					et_pb_generate_video_image( $video_image_button );
 				}
 
 				$map = this.$el.find('.et-pb-map');
@@ -2228,8 +2250,8 @@ var ET_PageBuilder = ET_PageBuilder || {};
 			createLayoutFromContent : function( content, parent_cid, inner_shortcodes ) {
 				var this_el = this,
 					et_pb_shortcodes_tags = typeof inner_shortcodes === 'undefined'
-						? 'et_pb_section|et_pb_row|et_pb_column|et_pb_column_inner|et_pb_row_inner|et_pb_text|et_pb_blurb|et_pb_tabs|et_pb_testimonial|et_pb_toggle|et_pb_cta|et_pb_signup|et_pb_login|et_pb_contact_form|et_pb_divider|et_pb_blog|et_pb_portfolio|et_pb_filterable_portfolio|et_pb_fullwidth_portfolio|et_pb_image|et_pb_gallery|et_pb_shop|et_pb_slider|et_pb_pricing_tables|et_pb_accordion|et_pb_counters|et_pb_circle_counter|et_pb_number_counter|et_pb_fullwidth_slider|et_pb_sidebar|et_pb_fullwidth_header|et_pb_map|et_pb_fullwidth_map|et_pb_fullwidth_menu|et_pb_countdown_timer|et_pb_social_media_follow|et_pb_team_member|et_pb_audio'
-						: 'et_pb_tab|et_pb_slide|et_pb_pricing_table|et_pb_counter|et_pb_accordion_item|et_pb_social_media_follow_network|et_pb_map_pin',
+						? 'et_pb_section|et_pb_row|et_pb_column|et_pb_column_inner|et_pb_row_inner|et_pb_text|et_pb_blurb|et_pb_tabs|et_pb_testimonial|et_pb_toggle|et_pb_cta|et_pb_signup|et_pb_login|et_pb_contact_form|et_pb_divider|et_pb_blog|et_pb_portfolio|et_pb_filterable_portfolio|et_pb_fullwidth_portfolio|et_pb_image|et_pb_gallery|et_pb_video|et_pb_video_slider|et_pb_shop|et_pb_slider|et_pb_pricing_tables|et_pb_accordion|et_pb_counters|et_pb_circle_counter|et_pb_number_counter|et_pb_fullwidth_slider|et_pb_sidebar|et_pb_fullwidth_header|et_pb_map|et_pb_fullwidth_map|et_pb_fullwidth_menu|et_pb_countdown_timer|et_pb_social_media_follow|et_pb_team_member|et_pb_audio'
+						: 'et_pb_tab|et_pb_slide|et_pb_pricing_table|et_pb_counter|et_pb_accordion_item|et_pb_video_slider_item|et_pb_social_media_follow_network|et_pb_map_pin',
 					reg_exp = window.wp.shortcode.regexp( et_pb_shortcodes_tags ),
 					inner_reg_exp = this.wp_regexp_not_global( et_pb_shortcodes_tags ),
 					matches = content.match( reg_exp );
@@ -2768,6 +2790,36 @@ var ET_PageBuilder = ET_PageBuilder || {};
 			});
 		}
 
+		function et_pb_generate_video_image( $video_image_button ) {
+			$video_image_button.click( function( event ) {
+				var $this_el = $(this),
+					$upload_field = $( '#et_pb_src.et-pb-upload-field' ),
+					video_url = $upload_field.val().trim();
+
+				event.preventDefault();
+
+				$.ajax( {
+					type: "POST",
+					url: et_pb_options.ajaxurl,
+					data:
+					{
+						action : 'et_pb_video_get_oembed_thumbnail',
+						et_load_nonce : et_pb_options.et_load_nonce,
+						et_video_url : video_url
+					},
+					success: function( response ) {
+						if ( response.length ) {
+							$('#et_pb_image_src').val( response ).trigger('input');
+						} else {
+							$this_el.after( '<div class="et-pb-error">' + et_pb_options.video_module_image_error + '</div>' );
+							$this_el.siblings('.et-pb-error').delay(5000).fadeOut(800);
+						}
+
+					}
+				} );
+			} );
+		}
+
 		function et_pb_generate_preview_image( $upload_button ){
 			var $upload_field = $upload_button.siblings( '.et-pb-upload-field' ),
 				$preview = $upload_field.siblings( '.et-pb-upload-preview' ),
@@ -2782,7 +2834,7 @@ var ET_PageBuilder = ET_PageBuilder || {};
 			}
 
 			if ( ! $preview.length ) {
-				$upload_button.after( '<div class="et-pb-upload-preview">' + '<strong class="et-pb-upload-preview-title">' + et_pb_options.preview_image + '</strong>' + '<img src="" width="300" height="300" /></div>' );
+				$upload_button.siblings('.description').before( '<div class="et-pb-upload-preview">' + '<strong class="et-pb-upload-preview-title">' + et_pb_options.preview_image + '</strong>' + '<img src="" width="300" height="300" /></div>' );
 				$preview = $upload_field.siblings( '.et-pb-upload-preview' );
 			}
 

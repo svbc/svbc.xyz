@@ -150,6 +150,43 @@ function et_pb_fix_builder_shortcodes( $content ) {
 }
 add_filter( 'the_content', 'et_pb_fix_builder_shortcodes' );
 
+function et_pb_video_oembed_data_parse( $return, $data, $url ) {
+	if ( isset( $data->thumbnail_url ) ) {
+		return esc_url( $data->thumbnail_url );
+	} else {
+		return false;
+	}
+}
+
+function et_pb_video_get_oembed_thumbnail() {
+	if ( ! wp_verify_nonce( $_POST['et_load_nonce'], 'et_load_nonce' ) ) {
+		die( -1 );
+	}
+
+	$video_url = esc_url( $_POST['et_video_url'] );
+
+	if ( false !== wp_oembed_get( $video_url ) ) {
+		// Get image thumbnail
+		add_filter( 'oembed_dataparse', 'et_pb_video_oembed_data_parse', 10, 3 );
+		// Save thumbnail
+		$image_src = wp_oembed_get( $video_url );
+		// Set back to normal
+		remove_filter( 'oembed_dataparse', 'et_pb_video_oembed_data_parse', 10, 3 );
+
+		if ( '' === $image_src ) {
+			die( -1 );
+		}
+
+		echo esc_url( $image_src );
+
+	} else {
+		die( -1 );
+	}
+
+	die();
+}
+add_action( 'wp_ajax_et_pb_video_get_oembed_thumbnail', 'et_pb_video_get_oembed_thumbnail' );
+
 function et_pb_add_widget_area(){
 	if ( ! wp_verify_nonce( $_POST['et_load_nonce'], 'et_load_nonce' ) ) die(-1);
 
@@ -343,6 +380,7 @@ function et_pb_add_builder_page_js_css(){
 		'stop_dropping_3_col_row'       => __( '3 column row can\'t be used in this column.', 'Divi' ),
 		'preview_image'                 => __( 'Preview', 'Divi' ),
 		'empty_admin_label'             => __( 'Module', 'Divi' ),
+		'video_module_image_error'      => __( 'Still images cannot be generated from this video service and/or this video format', 'Divi' ),
 	) );
 
 	wp_enqueue_style( 'et_pb_admin_css', ET_PB_URI . '/css/style.css', array(), ET_PB_VERSION );
@@ -984,6 +1022,208 @@ echo <<<END
 				<div class="et-pb-option-container">
 					<input id="et_pb_module_class" type="text" class="regular-text" value="<%= typeof( et_pb_module_class ) !== 'undefined' ?  et_pb_module_class : '' %>" />
 					<p class="description">Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.</p>
+				</div> <!-- .et-pb-option-container -->
+			</div> <!-- .et-pb-option -->
+		</div>
+	</script>
+
+	<script type="text/template" id="et-builder-et_pb_video-module-template">
+		<h3 class="et-pb-settings-heading">Video Module Settings</h3>
+
+		<div class="et-pb-main-settings">
+			<div class="et-pb-option">
+				<label for="et_pb_src">Video URL: </label>
+
+				<div class="et-pb-option-container">
+					<input id="et_pb_src" type="text" class="regular-text et-pb-upload-field" value="<%= typeof( et_pb_src ) !== 'undefined' ?  et_pb_src : '' %>" />
+					<input type='button' class='button button-upload et-pb-upload-button' value='Upload a video' data-choose="Choose a Video MP4 File" data-update="Set As Video" data-type="video" />
+					<p class="description">Upload your desired video, or type in the URL to the video you would like to display.</p>
+				</div> <!-- .et-pb-option-container -->
+			</div> <!-- .et-pb-option -->
+
+			<div class="et-pb-option">
+				<label for="et_pb_image_src">Image Overlay URL: </label>
+
+				<div class="et-pb-option-container">
+					<input id="et_pb_image_src" type="text" class="regular-text et-pb-upload-field" value="<%= typeof( et_pb_image_src ) !== 'undefined' ?  et_pb_image_src : '' %>" />
+					<input type='button' class='button button-upload et-pb-upload-button' value='Upload an image' data-choose="Choose an Image" data-update="Set As Image" data-type="image" />
+					<input type='button' class='button et-pb-video-image-button' value='Generate From Video' />
+					<p class="description">Upload your desired image, or type in the URL to the image you would like to display over your video. You can also generate a still image from your video.</p>
+				</div> <!-- .et-pb-option-container -->
+			</div> <!-- .et-pb-option -->
+
+			<div class="et-pb-option">
+				<label for="admin_label">Admin Label: </label>
+
+				<div class="et-pb-option-container">
+					<input id="admin_label" type="text" class="regular-text" value="<%= typeof( admin_label ) !== 'undefined' ?  admin_label : '' %>" />
+					<p class="description">This will change the label of the module in the builder for easy identification.</p>
+				</div> <!-- .et-pb-option-container -->
+			</div> <!-- .et-pb-option -->
+
+			<div class="et-pb-option">
+				<label for="et_pb_module_id">CSS ID: </label>
+
+				<div class="et-pb-option-container">
+					<input id="et_pb_module_id" type="text" class="regular-text" value="<%= typeof( et_pb_module_id ) !== 'undefined' ?  et_pb_module_id : '' %>" />
+					<p class="description">Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.</p>
+				</div> <!-- .et-pb-option-container -->
+			</div> <!-- .et-pb-option -->
+
+			<div class="et-pb-option">
+				<label for="et_pb_module_class">CSS Class: </label>
+
+				<div class="et-pb-option-container">
+					<input id="et_pb_module_class" type="text" class="regular-text" value="<%= typeof( et_pb_module_class ) !== 'undefined' ?  et_pb_module_class : '' %>" />
+					<p class="description">Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.</p>
+				</div> <!-- .et-pb-option-container -->
+			</div> <!-- .et-pb-option -->
+		</div>
+	</script>
+
+	<script type="text/template" id="et-builder-et_pb_video_slider-module-template">
+		<h3 class="et-pb-settings-heading">Video Slider Module Settings</h3>
+
+		<div class="et-pb-main-settings">
+			<div class="et-pb-option-advanced-module-settings" data-module_type="et_pb_video_slider_item">
+				<ul class="et-pb-sortable-options">
+				</ul>
+				<a href="#" class="et-pb-add-sortable-option"><span>Add New Video</span></a>
+			</div> <!-- .et-pb-option -->
+
+			<div class="et-pb-option">
+				<label for="et_pb_show_image_overlay">Display Image Overlays on Main Video: </label>
+				<div class="et-pb-option-container">
+					<select name="et_pb_show_image_overlay" id="et_pb_show_image_overlay">
+						<option value="hide"<%= typeof( et_pb_show_image_overlay ) !== 'undefined' && 'hide' === et_pb_show_image_overlay ? ' selected="selected"' : '' %>>Hide</option>
+						<option value="show"<%= typeof( et_pb_show_image_overlay ) !== 'undefined' && 'show' === et_pb_show_image_overlay ? ' selected="selected"' : '' %>>Show</option>
+					</select>
+
+					<p class="description">This option will cover the player UI on the main video. This image can either be uploaded in each video setting or auto-generated by Divi.</p>
+				</div> <!-- .et-pb-option-container -->
+			</div> <!-- .et-pb-option -->
+
+			<div class="et-pb-option">
+				<label for="et_pb_show_arrows">Arrows: </label>
+				<div class="et-pb-option-container">
+					<select name="et_pb_show_arrows" id="et_pb_show_arrows">
+						<option value="on"<%= typeof( et_pb_show_arrows ) !== 'undefined' && 'on' === et_pb_show_arrows ?  ' selected="selected"' : '' %>>Show Arrows</option>
+						<option value="off"<%= typeof( et_pb_show_arrows ) !== 'undefined' && 'off' === et_pb_show_arrows ?  ' selected="selected"' : '' %>>Hide Arrows</option>
+					</select>
+
+					<p class="description">This setting will turn on and off the navigation arrows.</p>
+				</div> <!-- .et-pb-option-container -->
+			</div> <!-- .et-pb-option -->
+
+			<div class="et-pb-option">
+				<label for="et_pb_show_thumbnails">Slider Controls: </label>
+				<div class="et-pb-option-container">
+					<select name="et_pb_show_thumbnails" id="et_pb_show_thumbnails">
+						<option value="on"<%= typeof( et_pb_show_thumbnails ) !== 'undefined' && 'on' === et_pb_show_thumbnails ?  ' selected="selected"' : '' %>>Use Thumbnail Track</option>
+						<option value="off"<%= typeof( et_pb_show_thumbnails ) !== 'undefined' && 'off' === et_pb_show_thumbnails ?  ' selected="selected"' : '' %>>Use Dot Navigation</option>
+					</select>
+
+					<p class="description">This setting will let you choose to use the thumbnail track controls below the slider or dot navigation at the bottom of the slider.</p>
+				</div> <!-- .et-pb-option-container -->
+			</div> <!-- .et-pb-option -->
+
+			<div class="et-pb-option">
+				<label for="et_pb_background_layout">Slider Controls Color: </label>
+				<div class="et-pb-option-container">
+					<select name="et_pb_controls_color" id="et_pb_controls_color">
+						<option value="light"<%= typeof( et_pb_controls_color ) !== 'undefined' && 'light' === et_pb_controls_color ?  ' selected="selected"' : '' %>>Light</option>
+						<option value="dark"<%= typeof( et_pb_controls_color ) !== 'undefined' && 'dark' === et_pb_controls_color ?  ' selected="selected"' : '' %>>Dark</option>
+					</select>
+
+					<p class="description">This setting will make your slider controls either light or dark in color. Slider controls are either the arrows on the thumbnail track or the circles in dot navigation.</p>
+				</div> <!-- .et-pb-option-container -->
+			</div> <!-- .et-pb-option -->
+
+			<div class="et-pb-option et-pb-option-main-content et-pb-option-advanced-module">
+				<label for="et_pb_content_new">Content: </label>
+
+				<div class="et-pb-option-container">
+					<div id="et_pb_content_new"><%= typeof( et_pb_content_new )!== 'undefined' ? et_pb_content_new : '' %></div>
+					<p class="description">Input the main text content for your slider here.</p>
+				</div> <!-- .et-pb-option-container -->
+			</div> <!-- .et-pb-option -->
+
+			<div class="et-pb-option">
+				<label for="admin_label">Admin Label: </label>
+
+				<div class="et-pb-option-container">
+					<input id="admin_label" type="text" class="regular-text" value="<%= typeof( admin_label ) !== 'undefined' ?  admin_label : '' %>" />
+					<p class="description">This will change the label of the module in the builder for easy identification.</p>
+				</div> <!-- .et-pb-option-container -->
+			</div> <!-- .et-pb-option -->
+
+			<div class="et-pb-option">
+				<label for="et_pb_module_id">CSS ID: </label>
+
+				<div class="et-pb-option-container">
+					<input id="et_pb_module_id" type="text" class="regular-text" value="<%= typeof( et_pb_module_id ) !== 'undefined' ?  et_pb_module_id : '' %>" />
+					<p class="description">Enter an optional CSS ID to be used for this module. An ID can be used to create custom CSS styling, or to create links to particular sections of your page.</p>
+				</div> <!-- .et-pb-option-container -->
+			</div> <!-- .et-pb-option -->
+
+			<div class="et-pb-option">
+				<label for="et_pb_module_class">CSS Class: </label>
+
+				<div class="et-pb-option-container">
+					<input id="et_pb_module_class" type="text" class="regular-text" value="<%= typeof( et_pb_module_class ) !== 'undefined' ?  et_pb_module_class : '' %>" />
+					<p class="description">Enter optional CSS classes to be used for this module. A CSS class can be used to create custom CSS styling. You can add multiple classes, separated with a space.</p>
+				</div> <!-- .et-pb-option-container -->
+			</div> <!-- .et-pb-option -->
+		</div>
+	</script>
+
+	<script type="text/template" id="et-builder-advanced-setting-et_pb_video_slider_item-title">
+		<%= typeof( et_pb_admin_title ) !== 'undefined' && typeof( et_pb_admin_title ) === 'string' ?  et_pb_admin_title : 'New Video' %>
+	</script>
+
+	<script type="text/template" id="et-builder-advanced-setting-et_pb_video_slider_item">
+		<h3 class="et-pb-settings-heading">Video Settings</h3>
+
+		<div class="et-pb-main-settings">
+			<div class="et-pb-option">
+				<label for="et_pb_admin_title">Admin Label: </label>
+
+				<div class="et-pb-option-container">
+					<input id="et_pb_admin_title" type="text" class="regular-text" value="<%= typeof( et_pb_admin_title ) !== 'undefined' ?  et_pb_admin_title : '' %>" />
+					<p class="description">This will change the label of the video in the builder for easy identification.</p>
+				</div> <!-- .et-pb-option-container -->
+			</div> <!-- .et-pb-option -->
+
+			<div class="et-pb-option">
+				<label for="et_pb_src">Video URL: </label>
+
+				<div class="et-pb-option-container">
+					<input id="et_pb_src" type="text" class="regular-text et-pb-upload-field" value="<%= typeof( et_pb_src ) !== 'undefined' ?  et_pb_src : '' %>" />
+					<input type='button' class='button button-upload et-pb-upload-button' value='Upload a video' data-choose="Choose a Video MP4 File" data-update="Set As Video" data-type="video" />
+					<p class="description">Upload your desired video, or type in the URL to the video you would like to display.</p>
+				</div> <!-- .et-pb-option-container -->
+			</div> <!-- .et-pb-option -->
+
+			<div class="et-pb-option">
+				<label for="et_pb_image_src">Image Overlay URL: </label>
+
+				<div class="et-pb-option-container">
+					<input id="et_pb_image_src" type="text" class="regular-text et-pb-upload-field" value="<%= typeof( et_pb_image_src ) !== 'undefined' ?  et_pb_image_src : '' %>" />
+					<input type='button' class='button button-upload et-pb-upload-button' value='Upload an image' data-choose="Choose an Image" data-update="Set As Image" data-type="image" />
+					<input type='button' class='button et-pb-video-image-button' value='Generate From Video' />
+					<p class="description">Upload your desired image, or type in the URL to the image you would like to display over your video. You can also generate a still image from your video.</p>
+				</div> <!-- .et-pb-option-container -->
+			</div> <!-- .et-pb-option -->
+
+			<div class="et-pb-option">
+				<label for="et_pb_background_layout">Slider Arrows Color: </label>
+				<div class="et-pb-option-container">
+					<select name="et_pb_background_layout" id="et_pb_background_layout">
+						<option value="dark"<%= typeof( et_pb_background_layout ) !== 'undefined' && 'dark' === et_pb_background_layout ?  ' selected="selected"' : '' %>>Light</option>
+						<option value="light"<%= typeof( et_pb_background_layout ) !== 'undefined' && 'light' === et_pb_background_layout ?  ' selected="selected"' : '' %>>Dark</option>
+					</select>
+
+					<p class="description">This setting will make your slider arrows either light or dark in color.</p>
 				</div> <!-- .et-pb-option-container -->
 			</div> <!-- .et-pb-option -->
 		</div>
@@ -1926,7 +2166,7 @@ echo <<<END
 	</script>
 
 	<script type="text/template" id="et-builder-et_pb_team_member-module-template">
-		<h3 class="et-pb-settings-heading">Team Member Module Settings</h3>
+		<h3 class="et-pb-settings-heading">Person Module Settings</h3>
 
 		<div class="et-pb-main-settings">
 			<div class="et-pb-option">
@@ -1934,7 +2174,7 @@ echo <<<END
 				<div class="et-pb-option-container">
 					<input id="et_pb_name" type="text" class="regular-text" value="<%= typeof( et_pb_name ) !== 'undefined' ?  et_pb_name : '' %>" />
 
-					<p class="description">Input the name of the team member.</p>
+					<p class="description">Input the name of the person.</p>
 				</div> <!-- .et-pb-option-container -->
 			</div> <!-- .et-pb-option -->
 
@@ -1943,7 +2183,7 @@ echo <<<END
 				<div class="et-pb-option-container">
 					<input id="et_pb_position" type="text" class="regular-text" value="<%= typeof( et_pb_position ) !== 'undefined' ?  et_pb_position : '' %>" />
 
-					<p class="description">Input the team member position.</p>
+					<p class="description">Input the person's position.</p>
 				</div> <!-- .et-pb-option-container -->
 			</div> <!-- .et-pb-option -->
 

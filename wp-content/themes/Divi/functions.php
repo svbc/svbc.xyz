@@ -35,6 +35,8 @@ function et_setup_theme() {
 	// don't display the empty title bar if the widget title is not set
 	remove_filter( 'widget_title', 'et_widget_force_title' );
 
+	remove_filter( 'body_class', 'et_add_fullwidth_body_class' );
+
 	add_action( 'wp_enqueue_scripts', 'et_add_responsive_shortcodes_css', 11 );
 
 	add_theme_support( 'post-formats', array(
@@ -2077,6 +2079,187 @@ function et_pb_image( $atts ) {
 	return $output;
 }
 
+add_shortcode( 'et_pb_video', 'et_pb_video' );
+function et_pb_video( $atts ) {
+	extract( shortcode_atts( array(
+			'module_id' => '',
+			'module_class' => '',
+			'src' => '',
+			'image_src' => '',
+		), $atts
+	) );
+
+	if ( '' !== $image_src ) {
+		$image_output = $image_src;
+	} else {
+		$image_output = '';
+	}
+
+	if ( '' !== $src ) {
+		if ( false !== wp_oembed_get( esc_url( $src ) ) ) {
+			$video_src = wp_oembed_get( esc_url( $src ) );
+		} else {
+			$video_src = sprintf( '
+				<video controls>
+					<source type="video/mp4" src="%1$s" />
+				</video>',
+				esc_url( $src )
+			);
+
+			wp_enqueue_style( 'wp-mediaelement' );
+			wp_enqueue_script( 'wp-mediaelement' );
+		}
+	}
+
+	$output = sprintf(
+		'<div%2$s class="et_pb_video%3$s">
+			<div class="et_pb_video_box">
+				%1$s
+			</div>
+			%4$s
+		</div>',
+		( '' !== $video_src ? $video_src : '' ),
+		( '' !== $module_id ? sprintf( ' id="%1$s"', esc_attr( $module_id ) ) : '' ),
+		( '' !== $module_class ? sprintf( ' %1$s', esc_attr( $module_class ) ) : '' ),
+		( '' !== $image_output
+			? sprintf(
+				'<div class="et_pb_video_overlay" style="background-image: url(%1$s);">
+					<div class="et_pb_video_overlay_hover">
+						<a href="#" class="et_pb_video_play"></a>
+					</div>
+				</div>',
+				esc_attr( $image_output )
+			)
+			: ''
+		)
+	);
+
+	return $output;
+}
+
+add_shortcode( 'et_pb_video_slider', 'et_pb_video_slider' );
+function et_pb_video_slider( $atts, $content = '' ) {
+	extract( shortcode_atts( array(
+			'module_id' => '',
+			'module_class' => '',
+			'show_arrows' => 'on',
+			'show_thumbnails' => 'on',
+			'show_image_overlay' => 'hide',
+			'controls_color' => 'light',
+		), $atts
+	) );
+
+	global $et_pb_slider_image_overlay;
+
+	$et_pb_slider_image_overlay = $show_image_overlay;
+
+	$class  = '';
+	$class .= 'off' === $show_arrows ? ' et_pb_slider_no_arrows' : '';
+	$class .= 'on' === $show_thumbnails ? ' et_pb_slider_carousel et_pb_slider_no_pagination' : '';
+	$class .= 'off' === $show_thumbnails ? ' et_pb_slider_dots' : '';
+	$class .= " et_pb_controls_{$controls_color}";
+
+	$content = do_shortcode( et_pb_fix_shortcodes( $content ) );
+
+	$output = sprintf(
+		'<div%3$s class="et_pb_video_slider%4$s">
+			<div class="et_pb_slider et_pb_preload%1$s">
+				<div class="et_pb_slides">
+					%2$s
+				</div> <!-- .et_pb_slides -->
+			</div> <!-- .et_pb_slider -->
+		</div> <!-- .et_pb_video_slider -->
+		',
+		esc_attr( $class ),
+		$content,
+		( '' !== $module_id ? sprintf( ' id="%1$s"', esc_attr( $module_id ) ) : '' ),
+		( '' !== $module_class ? sprintf( ' %1$s', esc_attr( $module_class ) ) : '' )
+	);
+
+	return $output;
+}
+
+add_shortcode( 'et_pb_video_slider_item', 'et_pb_video_slider_item' );
+function et_pb_video_slider_item( $atts, $content = '' ) {
+	extract( shortcode_atts( array(
+			'src' => '',
+			'image_src' => '',
+			'background_layout' => 'dark',
+		), $atts
+	) );
+
+	global $et_pb_slider_image_overlay;
+
+	$class  = '';
+	$class .= " et_pb_bg_layout_{$background_layout}";
+
+	if ( '' !== $image_src ) {
+		$image_overlay_output = $image_src;
+		$thumbnail_track_output = $image_src;
+	} else {
+		$image_overlay_output = '';
+		if ( false !== wp_oembed_get( esc_url( $src ) ) ) {
+			add_filter( 'oembed_dataparse', 'et_pb_video_oembed_data_parse', 10, 3 );
+			// Save thumbnail
+			$thumbnail_track_output = wp_oembed_get( esc_url( $src ) );
+			// Set back to normal
+			remove_filter( 'oembed_dataparse', 'et_pb_video_oembed_data_parse', 10, 3 );
+		} else {
+			$thumbnail_track_output = '';
+		}
+	}
+
+	if ( '' !== $src ) {
+		if ( false !== wp_oembed_get( esc_url( $src ) ) ) {
+			$video_src = wp_oembed_get( esc_url( $src ) );
+		} else {
+			$video_src = sprintf( '
+				<video controls>
+					<source type="video/mp4" src="%1$s" />
+				</video>',
+				esc_url( $src )
+			);
+
+			wp_enqueue_style( 'wp-mediaelement' );
+			wp_enqueue_script( 'wp-mediaelement' );
+		}
+	}
+
+	$video_output = sprintf(
+		'<div class="et_pb_video_wrap">
+			<div class="et_pb_video_box">
+				%1$s
+			</div>
+			%2$s
+		</div>',
+		( '' !== $video_src ? $video_src : '' ),
+		(
+			( '' !== $image_overlay_output && $et_pb_slider_image_overlay == 'show' )
+				? sprintf(
+					'<div class="et_pb_video_overlay" style="background-image: url(%1$s);">
+						<div class="et_pb_video_overlay_hover">
+							<a href="#" class="et_pb_video_play"></a>
+						</div>
+					</div>',
+					esc_attr( $image_overlay_output )
+				)
+				: ''
+		)
+	);
+
+	$output = sprintf(
+		'<div class="et_pb_slide%1$s"%3$s>
+			%2$s
+		</div> <!-- .et_pb_slide -->
+		',
+		esc_attr( $class ),
+		( '' !== $video_output ? $video_output : '' ),
+		( '' !== $thumbnail_track_output ? sprintf( ' data-image="%1$s"', esc_attr( $thumbnail_track_output ) ) : '' )
+	);
+
+	return $output;
+}
+
 add_shortcode( 'et_pb_testimonial', 'et_pb_testimonial' );
 function et_pb_testimonial( $atts, $content = '' ) {
 	extract( shortcode_atts( array(
@@ -3298,7 +3481,7 @@ function et_pb_login( $atts, $content = null ) {
 			esc_attr( $username ),
 			esc_html( $password ),
 			esc_attr( $password ),
-			esc_url( site_url( 'wp-login.php' ) ),
+			esc_url( site_url( 'wp-login.php', 'login_post' ) ),
 			__( 'Login', 'Divi' ),
 			( 'on' === $current_page_redirect
 				? sprintf( '<input type="hidden" name="redirect_to" value="%1$s" />',  $redirect_url )

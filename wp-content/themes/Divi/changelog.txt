@@ -1,3 +1,35 @@
+version 2.2 ( updated 11-06-2014 )
+- 2 New Modules: Video and Video Slider
+	* et-pagebuilder/css/style.css
+	* et-pagebuilder/et-pagebuilder.php
+	* et-pagebuilder/js/admin.js
+	* functions.php
+	* js/custom.js
+	* style.css
+	* Renamed fonts:
+		* et-pagebuilder/fonts/etbuilder_v2_2.eot
+		* et-pagebuilder/fonts/etbuilder_v2_2.svg
+		* et-pagebuilder/fonts/etbuilder_v2_2.ttf
+		* et-pagebuilder/fonts/etbuilder_v2_2.woff
+- Renamed Team Member module to Person Module
+	* et-pagebuilder/et-pagebuilder.php
+	* et-pagebuilder/js/admin.js
+- Added login_post scheme variable to login form module ( Fixes issues with Login module on WP Engine )
+	* functions.php
+- Removed all "fuzzy" translations from localization files
+	* lang/de_DE.mo
+	* lang/de_DE.po
+	* lang/en_US.mo
+	* lang/en_US.po
+	* lang/ru_RU.mo
+	* lang/ru_RU.po
+- Fixed bug that would make countdown timer days negative when event has passed
+- Fixed the issue with Number Counter decimal values, rounded on scroll event
+	* js/custom.js
+- Increased z-index on Scroll To Top button to display it to ensure it's always displayed on top of all elements
+- Bumped version number
+	* style.css
+
 version 2.1.4 ( updated 09-02-2014 )
 - Fixed MailChimp API file name
 	* includes/subscription/mailchimp/mailchimp.php
