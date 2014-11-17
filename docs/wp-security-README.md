@@ -1,7 +1,8 @@
 # WordPress - Security
 The plugins in this component repo includes plugins that scan WordPress for bad things happening, and help prevent and revert them.
 
-* [Sucuri Security - Auditing, Malware Scanner and Security Hardening](https://wordpress.org/plugins/sucuri-scanner/) -  The Sucuri WordPress Security plugin is a security toolset for security integrity monitoring, malware detection and security hardening.
+* [Sucuri Security](https://wordpress.org/plugins/sucuri-scanner/) - A security toolset for security integrity monitoring, malware detection and security hardening.
+* [Limit Login Attempts](https://wordpress.org/plugins/limit-login-attempts/) - Limit rate of login attempts, including by way of cookies, for each IP. Fully customizable.
 
 ## License
 
