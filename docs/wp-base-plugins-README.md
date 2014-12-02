@@ -9,6 +9,7 @@ This repository is used to build WordPress distributions for deployment from git
 * [PushPress](http://wordpress.org/plugins/pushpress/) - Adds PubSubHubbub (PuSH) support; should be activated as Network Plugin for Multisite instances.
 * [Redirection](http://wordpress.org/plugins/redirection/) - Manages 301 redirections and logs 404 errors.
 * [Regenerate Thumbnails](https://wordpress.org/plugins/regenerate-thumbnails/) - Allows you to regenerate your thumbnails after changing the thumbnail sizes.
+* [Simple Custom CSS](https://wordpress.org/plugins/simple-custom-css/) - Add Custom CSS to your WordPress site without any hassles.
 * [Subscribe To Comments Reloaded](http://wordpress.org/plugins/subscribe-to-comments-reloaded/) - Let's users subscribe to comments on posts, without third-party service.
 * [SyntaxHighlighter Evolved](http://wordpress.org/plugins/syntaxhighlighter/) - Provides syntaxhighlighting, may be deprecated in favor of Markdown code blocks provided by another plugin.
 * [Upload File Type Settings Plugin](http://wordpress.org/plugins/upload-file-type-settings-plugin/) - Allows adding additional file types to upload in the media library.
