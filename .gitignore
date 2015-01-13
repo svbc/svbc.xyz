@@ -1,0 +1,15 @@
+# This .gitignore document is for tracking WordPress deployment, without the 
+# WordPress core files.
+#
+# It follows a specific methodology, and most component repos only have two
+# directories: wp-content and docs
+
+# Ignore everything in the root, except our commons directories and README
+/*
+!.gitignore
+!wp-content/
+!docs/
+!README.md
+
+# Gandi Simple Hosting specific
+!htdocs/
